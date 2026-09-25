@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dhanaulti or Bust 🏔️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#173D34;
+    --pine-deep:#0E2921;
+    --fog:#F3EFE4;
+    --sunrise:#E8874B;
+    --sunrise-soft:#F2B27E;
+    --sky:#5F93A6;
+    --sage:#8FA98F;
+    --paper:#FBF8F1;
+    --ink:#173226;
+    --card-shadow: 0 14px 30px rgba(14,41,33,0.16);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0F2620;
+      --ink:#EFEADF;
+    }
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top: env(safe-area-inset-top, 0px);}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    min-height:100%;
+    background:
+      radial-gradient(ellipse at 50% -10%, #FBDFB8 0%, #F5C48A 22%, #E8874B 48%, #C56B4A 68%, var(--pine) 100%);
+    font-family:'Manrope', sans-serif;
+    color:var(--ink);
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* ---------- Illustrated hillside backdrop (fixed, full-page) ---------- */
+  .scenery{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .scenery svg{
+    position:absolute;
+    bottom:0; left:0;
+    width:100%;
+    min-height:62vh;
+  }
+  .wrap{ position:relative; z-index:1; }
+
+  /* ---------- Floating clouds ---------- */
+  .cloud{
+    position:absolute;
+    background:rgba(255,255,255,0.55);
+    border-radius:100px;
+    filter:blur(1px);
+    pointer-events:none;
+  }
+  .cloud::before,.cloud::after{
+    content:"";
+    position:absolute;
+    background:inherit;
+    border-radius:100px;
+  }
+  .c1{width:120px;height:36px; top:6%; left:8%;}
+  .c1::before{width:60px;height:60px; top:-28px; left:14px;}
+  .c1::after{width:44px;height:44px; top:-18px; left:60px;}
+  .c2{width:90px;height:28px; top:12%; right:10%; opacity:.8;}
+  .c2::before{width:44px;height:44px; top:-20px; left:10px;}
+  .c2::after{width:34px;height:34px; top:-12px; left:44px;}
+  .c3{width:70px;height:22px; top:20%; left:38%; opacity:.6;}
+  .c3::before{width:34px;height:34px; top:-16px; left:8px;}
+
+  /* ---------- Header ---------- */
+  .wrap{max-width:760px; margin:0 auto; padding:48px 22px 80px;}
+
+  .kicker{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    color:var(--pine-deep);
+    letter-spacing:.02em;
+    margin-bottom:6px;
+  }
+  .kicker svg{flex-shrink:0;}
+
+  h1{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:clamp(34px, 7vw, 58px);
+    line-height:1.02;
+    text-align:center;
+    color:var(--pine-deep);
+    margin:6px 0 4px;
+    text-shadow: 0 3px 0 rgba(255,255,255,0.25);
+  }
+  .sub{
+    text-align:center;
+    font-size:17px;
+    font-weight:600;
+    color:#4A2E1D;
+    max-width:480px;
+    margin:0 auto 40px;
+  }
+  .sub b{color:var(--pine-deep);}
+
+  /* ---------- Countdown card ---------- */
+  .stage{
+    position:relative;
+    background:var(--paper);
+    border-radius:28px;
+    box-shadow:var(--card-shadow);
+    padding:38px 24px 30px;
+    border:2px solid rgba(23,61,52,0.08);
+  }
+
+  .caption-tag{
+    display:inline-block;
+    background:var(--sunrise);
+    color:#fff;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:13px;
+    padding:6px 16px;
+    border-radius:999px;
+    position:absolute;
+    top:-18px; left:50%;
+    transform:translateX(-50%);
+    box-shadow:0 6px 14px rgba(232,135,75,0.4);
+    white-space:nowrap;
+  }
+
+  .bignum-row{
+    display:flex; align-items:baseline; justify-content:center; gap:16px;
+    margin-bottom:6px;
+  }
+  .bignum{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:clamp(70px, 22vw, 150px);
+    line-height:0.85;
+    color:var(--pine-deep);
+  }
+  .bignum-label{
+    font-weight:700;
+    font-size:18px;
+    color:var(--sunrise);
+    align-self:flex-end;
+    margin-bottom:14px;
+  }
+
+  .funny-line{
+    text-align:center;
+    font-size:18px;
+    font-weight:600;
+    color:var(--ink);
+    min-height:50px;
+    max-width:480px;
+    margin:6px auto 20px;
+    transition:opacity .3s ease;
+  }
+
+  .split{
+    display:grid; grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    max-width:440px;
+    margin:0 auto;
+  }
+  .unit{
+    background:var(--pine);
+    color:var(--fog);
+    border-radius:14px;
+    padding:12px 4px 10px;
+    text-align:center;
+  }
+  .unit .n{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:clamp(22px,5.5vw,32px);
+    font-variant-numeric: tabular-nums;
+  }
+  .unit .l{
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.06em;
+    opacity:.75;
+    margin-top:2px;
+  }
+
+  .excite-wrap{max-width:440px; margin:26px auto 0;}
+  .excite-label{
+    display:flex; justify-content:space-between;
+    font-size:12px; font-weight:700; color:var(--pine-deep); opacity:.75;
+    margin-bottom:6px;
+  }
+  .excite-bar{
+    height:12px; border-radius:999px; background:#E7E1D2; overflow:hidden;
+  }
+  .excite-fill{
+    height:100%; border-radius:999px;
+    background:linear-gradient(90deg, var(--sage), var(--sunrise));
+    width:10%;
+    transition:width 1s ease;
+  }
+
+  /* ---------- trip card ---------- */
+  .info-card{
+    margin-top:26px;
+    background:var(--pine-deep);
+    color:var(--fog);
+    border-radius:24px;
+    padding:26px 24px;
+    box-shadow:var(--card-shadow);
+  }
+  .info-card h2{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:20px;
+    margin:0 0 14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .info-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px 18px;
+  }
+  .info-item .k{font-size:11px; opacity:.6; font-weight:600; letter-spacing:.05em;}
+  .info-item .v{font-size:15px; font-weight:700; margin-top:2px;}
+  @media (max-width:420px){ .info-grid{grid-template-columns:1fr;} }
+
+  /* ---------- checklist ---------- */
+  .checklist{
+    margin-top:22px;
+    background:var(--paper);
+    border-radius:24px;
+    padding:24px 22px;
+    box-shadow:var(--card-shadow);
+  }
+  .checklist h2{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:19px;
+    margin:0 0 4px;
+    color:var(--pine-deep);
+  }
+  .checklist p.hint{margin:0 0 16px; font-size:13px; color:#6b6252;}
+  .item{
+    display:flex; align-items:flex-start; gap:12px;
+    padding:10px 0;
+    border-bottom:1px dashed #E2DBC9;
+  }
+  .item:last-child{border-bottom:none;}
+  .item input{
+    margin-top:3px;
+    width:19px; height:19px;
+    accent-color:var(--sunrise);
+    flex-shrink:0;
+  }
+  .item label{font-size:15px; font-weight:600; cursor:pointer;}
+  .item.done label{ text-decoration:line-through; opacity:.45;}
+
+  footer{
+    text-align:center;
+    margin-top:34px;
+    font-size:13px;
+    color:#4A2E1D;
+    opacity:.75;
+    font-weight:600;
+  }
+
+  /* Mountain silhouette footer */
+  .mountains{
+    position:relative;
+    height:90px;
+    margin-top:-2px;
+  }
+  .mountains svg{position:absolute; bottom:0; left:0; width:100%; height:100%;}
+
+  /* confetti */
+  .confetti-piece{
+    position:fixed; top:-10px; z-index:50; border-radius:2px; pointer-events:none;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .confetti-piece{ display:none; }
+  }
+
+  /* ---------- Real Dhanaulti scenic photo strip (added) ---------- */
+  .scenic-photos{
+    margin:0 auto 26px;
+    display:grid;
+    grid-template-columns:1.35fr 1fr 1fr;
+    gap:10px;
+    max-width:760px;
+  }
+  .scenic-photo{
+    position:relative;
+    height:150px;
+    overflow:hidden;
+    border-radius:20px;
+    box-shadow:var(--card-shadow);
+    background:#d9e2e6;
+  }
+  .scenic-photo img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    transition:transform .7s ease;
+  }
+  .scenic-photo:hover img{transform:scale(1.04);}
+  .scenic-photo:first-child{height:190px;}
+  .scenic-photo-label{
+    position:absolute;
+    left:12px;
+    bottom:10px;
+    background:rgba(14,41,33,.78);
+    color:#fff;
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:700;
+    backdrop-filter:blur(5px);
+  }
+  .scenic-credit{
+    grid-column:1/-1;
+    text-align:right;
+    font-size:9px;
+    color:var(--pine-deep);
+    opacity:.7;
+    margin-top:-3px;
+  }
+  .scenic-credit a{color:inherit;}
+  @media (max-width:620px){
+    .scenic-photos{
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+    .scenic-photo,
+    .scenic-photo:first-child{height:135px;}
+    .scenic-photo:first-child{grid-column:1/-1;height:190px;}
+  }
+
+</style>
+</head>
+<body>
+
+  <div class="scenery" aria-hidden="true">
+    <svg viewBox="0 0 1200 640" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFE8BE" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#FFE8BE" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="ridge1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#9FB9AE"/>
+          <stop offset="100%" stop-color="#7FA396"/>
+        </linearGradient>
+        <linearGradient id="ridge2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5C8677"/>
+          <stop offset="100%" stop-color="#487060"/>
+        </linearGradient>
+        <linearGradient id="ridge3" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2E5847"/>
+          <stop offset="100%" stop-color="#1E4436"/>
+        </linearGradient>
+        <linearGradient id="ridge4" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#173D34"/>
+          <stop offset="100%" stop-color="#0E2921"/>
+        </linearGradient>
+      </defs>
+
+      <!-- soft sun glow high in the sky -->
+      <circle cx="620" cy="70" r="180" fill="url(#sunGlow)"/>
+      <circle cx="620" cy="70" r="46" fill="#FFF3D6" opacity="0.9"/>
+
+      <!-- a couple of distant birds -->
+      <path d="M300 120 q10 -12 20 0 q10 -12 20 0" stroke="#4A2E1D" stroke-width="2.5" fill="none" opacity="0.35" stroke-linecap="round"/>
+      <path d="M860 150 q9 -10 18 0 q9 -10 18 0" stroke="#4A2E1D" stroke-width="2.5" fill="none" opacity="0.3" stroke-linecap="round"/>
+
+      <!-- far misty ridge -->
+      <path d="M0 300 L60 260 140 290 240 240 340 285 460 235 560 275 680 230 800 270 920 225 1040 265 1140 235 1200 260 1200 640 0 640 Z" fill="url(#ridge1)" opacity="0.65"/>
+
+      <!-- mid ridge with terrace hints -->
+      <path d="M0 380 L100 330 220 360 320 300 440 355 560 310 660 350 780 300 900 345 1020 305 1120 340 1200 315 1200 640 0 640 Z" fill="url(#ridge2)" opacity="0.85"/>
+
+      <!-- pine-covered ridge -->
+      <path d="M0 460 L80 410 160 440 260 390 360 430 460 380 560 425 660 385 760 425 880 380 980 420 1080 390 1200 420 1200 640 0 640 Z" fill="url(#ridge3)"/>
+
+      <!-- pine tree silhouettes along that ridge -->
+      <g fill="#173D34" opacity="0.9">
+        <path d="M95 430 l10 -34 10 34 -6 0 -1 8 -6 0 -1 -8 Z"/>
+        <path d="M175 425 l9 -30 9 30 -5 0 -1 7 -6 0 -1 -7 Z"/>
+        <path d="M275 378 l10 -34 10 34 -6 0 -1 8 -6 0 -1 -8 Z"/>
+        <path d="M375 418 l9 -30 9 30 -5 0 -1 7 -6 0 -1 -7 Z"/>
+        <path d="M475 368 l10 -34 10 34 -6 0 -1 8 -6 0 -1 -8 Z"/>
+        <path d="M580 412 l9 -30 9 30 -5 0 -1 7 -6 0 -1 -7 Z"/>
+        <path d="M680 372 l10 -34 10 34 -6 0 -1 8 -6 0 -1 -8 Z"/>
+        <path d="M775 412 l9 -30 9 30 -5 0 -1 7 -6 0 -1 -7 Z"/>
+        <path d="M895 368 l10 -34 10 34 -6 0 -1 8 -6 0 -1 -8 Z"/>
+        <path d="M995 408 l9 -30 9 30 -5 0 -1 7 -6 0 -1 -7 Z"/>
+        <path d="M1095 378 l10 -34 10 34 -6 0 -1 8 -6 0 -1 -8 Z"/>
+      </g>
+
+      <!-- foreground darkest ridge with a resort-like cluster of roofs -->
+      <path d="M0 540 L100 495 200 525 320 470 440 520 560 480 680 515 800 465 920 510 1040 480 1140 505 1200 485 1200 640 0 640 Z" fill="url(#ridge4)"/>
+
+      <!-- tiny resort roofline hint on the foreground ridge -->
+      <g fill="#0E2921" stroke="#2E5847" stroke-width="1.5">
+        <rect x="540" y="478" width="26" height="16" />
+        <path d="M536 478 L553 462 570 478 Z"/>
+        <rect x="575" y="486" width="20" height="12" />
+        <path d="M572 486 L585 474 598 486 Z"/>
+      </g>
+
+      <!-- foreground pine silhouettes, larger & closer -->
+      <g fill="#0E2921">
+        <path d="M40 545 l14 -46 14 46 -8 0 -1 10 -10 0 -1 -10 Z"/>
+        <path d="M150 520 l16 -52 16 52 -9 0 -1 11 -12 0 -1 -11 Z"/>
+        <path d="M980 515 l16 -52 16 52 -9 0 -1 11 -12 0 -1 -11 Z"/>
+        <path d="M1120 535 l14 -46 14 46 -8 0 -1 10 -10 0 -1 -10 Z"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+
+  <div class="wrap">
+
+    <div class="kicker">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 20L9 8L13 15L16 10L21 20H3Z" fill="#173D34"/></svg>
+      OFFICE TRIP ALERT
+    </div>
+    <h1>Dhanaulti or Bust</h1>
+    <p class="sub">Destination: <b>Needam Resort, Dhanaulti, Uttarakhand</b> — pine forests, mountain air, and the annual tradition of pretending we didn't overpack.</p>
+    <!-- Real Dhanaulti scenic photographs -->
+    <div class="scenic-photos" aria-label="Scenic Dhanaulti mountain views">
+      <div class="scenic-photo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Himalays-viewed-from-Dhanaulti.jpg/1280px-Himalays-viewed-from-Dhanaulti.jpg"
+             alt="Garhwal Himalayas viewed from Dhanaulti"
+             loading="lazy">
+        <div class="scenic-photo-label">Dhanaulti • Himalayas</div>
+      </div>
+      <div class="scenic-photo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Tehri_Garhwal_view.jpg"
+             alt="Tehri Garhwal mountain view near Dhanaulti"
+             loading="lazy">
+        <div class="scenic-photo-label">Mountain air</div>
+      </div>
+      <div class="scenic-photo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Swargrohini_Peaks%2C_view_from_Dhanaulti.jpg"
+             alt="Swargrohini Peaks viewed from Dhanaulti"
+             loading="lazy">
+        <div class="scenic-photo-label">Snow peaks</div>
+      </div>
+      <div class="scenic-credit">
+        Photos: Wikimedia Commons — real photographs of views from/near Dhanaulti.
+      </div>
+    </div>
+
+
+    <div class="stage">
+      <div class="caption-tag" id="tag">LOADING EXCUSES...</div>
+      <div class="bignum-row">
+        <div class="bignum" id="bigDay">–</div>
+        <div class="bignum-label" id="bigDayLabel">days</div>
+      </div>
+      <div class="funny-line" id="funnyLine">Calculating how many more standups stand between us and the mountains…</div>
+
+      <div class="split">
+        <div class="unit"><div class="n" id="dd">00</div><div class="l">DAYS</div></div>
+        <div class="unit"><div class="n" id="hh">00</div><div class="l">HRS</div></div>
+        <div class="unit"><div class="n" id="mm">00</div><div class="l">MIN</div></div>
+        <div class="unit"><div class="n" id="ss">00</div><div class="l">SEC</div></div>
+      </div>
+
+      <div class="excite-wrap">
+        <div class="excite-label"><span>Office excitement level</span><span id="excitePct">10%</span></div>
+        <div class="excite-bar"><div class="excite-fill" id="exciteFill"></div></div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h2>🚌 Trip briefing</h2>
+      <div class="info-grid">
+        <div class="info-item"><div class="k">DESTINATION</div><div class="v">Needam Resort, Dhanaulti</div></div>
+        <div class="info-item"><div class="k">DEPARTURE</div><div class="v">1 October</div></div>
+        <div class="info-item"><div class="k">ALTITUDE</div><div class="v">~2,250m — bring a jacket</div></div>
+        <div class="info-item"><div class="k">OFFICIAL AGENDA</div><div class="v">Team bonding</div></div>
+      </div>
+    </div>
+
+    <div class="checklist">
+      <h2>🎒 Pre-flight checklist</h2>
+      <p class="hint">Tap to check off. Item 4 is non-negotiable.</p>
+      <div id="checklistItems"></div>
+    </div>
+
+    <footer>See you on the other side of the Slack notifications 🏔️</footer>
+  </div>
+
+<script>
+(function(){
+  // ---- Target date: 1 Oct, 00:00 IST ----
+  var target = new Date("2026-10-01T00:00:00+05:30").getTime();
+
+  var funnyByDay = {
+    5: ["5 DAYS LEFT: MAX DENIAL", "5 days of nodding in meetings while mentally packing your bag."],
+    4: ["4 DAYS: BOSS RADAR ACTIVE", "4 days left. Suddenly everyone's very productive so no one gets 'urgent work' on trip week."],
+    3: ["3 DAYS: SNACK PROCUREMENT PHASE", "3 days. The office WhatsApp group has now become 90% snack polls, 10% actual work."],
+    2: ["2 DAYS: PACKING PANIC BEGINS", "2 days left. You will pack for 3 seasons for a 2-day trip. This is tradition."],
+    1: ["1 DAY: FINAL COUNTDOWN", "1 day to go. Out-of-office reply: drafted. Dignity: also packed."],
+    0: ["TODAY IS THE DAY", "It's happening. Needam Resort, Dhanaulti — we're coming for your bonfires and your mountain views."]
+  };
+  var pastLine = ["ENJOY THE MOUNTAINS", "Hope the pine forests are treating you better than your inbox ever did. 🏔️"];
+
+  var els = {
+    tag: document.getElementById('tag'),
+    bigDay: document.getElementById('bigDay'),
+    bigDayLabel: document.getElementById('bigDayLabel'),
+    funnyLine: document.getElementById('funnyLine'),
+    dd: document.getElementById('dd'), hh: document.getElementById('hh'),
+    mm: document.getElementById('mm'), ss: document.getElementById('ss'),
+    exciteFill: document.getElementById('exciteFill'),
+    excitePct: document.getElementById('excitePct')
+  };
+
+  var celebrated = false;
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function tick(){
+    var now = Date.now();
+    var diff = target - now;
+
+    if (diff <= 0){
+      els.tag.textContent = pastLine[0];
+      els.bigDay.textContent = "🎉";
+      els.bigDayLabel.textContent = "";
+      els.funnyLine.textContent = pastLine[1];
+      els.dd.textContent = els.hh.textContent = els.mm.textContent = els.ss.textContent = "00";
+      els.exciteFill.style.width = "100%";
+      els.excitePct.textContent = "100%";
+      if (!celebrated){ celebrated = true; burstConfetti(); }
+      return;
+    }
+
+    var totalSeconds = Math.floor(diff/1000);
+    var days = Math.floor(totalSeconds / 86400);
+    var hours = Math.floor((totalSeconds % 86400) / 3600);
+    var mins = Math.floor((totalSeconds % 3600) / 60);
+    var secs = totalSeconds % 60;
+
+    els.dd.textContent = pad(days);
+    els.hh.textContent = pad(hours);
+    els.mm.textContent = pad(mins);
+    els.ss.textContent = pad(secs);
+
+    var dayKey = Math.min(days, 5);
+    var lines = funnyByDay[dayKey] || funnyByDay[5];
+    els.tag.textContent = lines[0];
+    els.funnyLine.textContent = lines[1];
+
+    els.bigDay.textContent = days;
+    els.bigDayLabel.textContent = days === 1 ? "day" : "days";
+
+    var pct = Math.max(6, Math.min(100, Math.round((1 - days/6) * 100)));
+    els.exciteFill.style.width = pct + "%";
+    els.excitePct.textContent = pct + "%";
+  }
+
+  tick();
+  setInterval(tick, 1000);
+
+  // ---- Confetti burst on arrival ----
+  function burstConfetti(){
+    var colors = ['#E8874B','#F2B27E','#8FA98F','#5F93A6','#173D34'];
+    for (var i=0; i<80; i++){
+      (function(){
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        var size = 6 + Math.random()*6;
+        el.style.width = size+'px';
+        el.style.height = (size*0.4)+'px';
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        el.style.left = (Math.random()*100)+'vw';
+        el.style.transform = 'rotate('+(Math.random()*360)+'deg)';
+        document.body.appendChild(el);
+        var duration = 2500 + Math.random()*2000;
+        var endY = window.innerHeight + 40;
+        var drift = (Math.random()-0.5)*200;
+        el.animate([
+          { transform: el.style.transform + ' translate(0,0)', opacity:1 },
+          { transform: el.style.transform + ' translate('+drift+'px,'+endY+'px)', opacity:0.9 }
+        ], { duration: duration, easing:'ease-in', fill:'forwards' });
+        setTimeout(function(){ el.remove(); }, duration+100);
+      })();
+    }
+  }
+
+  // ---- Checklist (per-viewer memory only) ----
+  var items = [
+    "Warm jacket (Dhanaulti gets cold at night)",
+    "Comfortable walking shoes",
+    "Power bank + charger",
+    "Snacks to smuggle onto the bus",
+    "ID proof",
+    "Camera / phone storage cleared for mountain views",
+    "A face ready for 200 forced group photos"
+  ];
+  var listEl = document.getElementById('checklistItems');
+  var saved = {};
+  try {
+    saved = JSON.parse(localStorage.getItem('dhanaulti-checklist') || '{}');
+  } catch(e){ saved = {}; }
+
+  items.forEach(function(text, idx){
+    var row = document.createElement('div');
+    row.className = 'item' + (saved[idx] ? ' done' : '');
+    var id = 'chk'+idx;
+    row.innerHTML = '<input type="checkbox" id="'+id+'" '+(saved[idx] ? 'checked' : '')+'><label for="'+id+'">'+text+'</label>';
+    listEl.appendChild(row);
+    row.querySelector('input').addEventListener('change', function(e){
+      row.classList.toggle('done', e.target.checked);
+      saved[idx] = e.target.checked;
+      try { localStorage.setItem('dhanaulti-checklist', JSON.stringify(saved)); } catch(err){}
+    });
+  });
+})();
+</script>
+</body>
+</html>
